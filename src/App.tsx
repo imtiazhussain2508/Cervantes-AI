@@ -26,16 +26,16 @@ import Dashboard from "./Dashboard";
 // --- Components ---
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md border-b border-slate-100 py-3 shadow-sm" : "bg-transparent py-5"}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md border-b border-slate-100 py-3 shadow-sm" : "bg-transparent py-5"}`}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img src="/image 1.png" alt="Cervantes AI" className="h-8" />
@@ -69,10 +69,10 @@ const HeroMockup = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
   
-  const fullPrompt = "Create a stunning cityscape image...";
+  const fullPrompt = "A modern cityscape at sunset with vibrant colors...";
   
   useEffect(() => {
-    const mainInterval = setInterval(() => {
+    const timer = setInterval(() => {
       setActiveStep((prev) => {
         const next = (prev + 1) % 3;
         setShowPrompt(false);
@@ -82,19 +82,19 @@ const HeroMockup = () => {
         return next;
       });
     }, 12000);
-    return () => clearInterval(mainInterval);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
     if (activeStep >= 0) {
-      const timer1 = setTimeout(() => setShowPrompt(true), 1000);
-      const timer2 = setTimeout(() => {
-        let i = 0;
-        const typeInterval = setInterval(() => {
-          setPromptText(fullPrompt.slice(0, i));
-          i++;
-          if (i > fullPrompt.length) {
-            clearInterval(typeInterval);
+      const showPromptTimer = setTimeout(() => setShowPrompt(true), 1000);
+      const startTyping = setTimeout(() => {
+        let charIndex = 0;
+        const typing = setInterval(() => {
+          setPromptText(fullPrompt.slice(0, charIndex));
+          charIndex++;
+          if (charIndex > fullPrompt.length) {
+            clearInterval(typing);
             setTimeout(() => {
               setShowPrompt(false);
               setShowLoading(true);
@@ -107,8 +107,8 @@ const HeroMockup = () => {
         }, 50);
       }, 1500);
       return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
+        clearTimeout(showPromptTimer);
+        clearTimeout(startTyping);
       };
     }
   }, [activeStep]);
@@ -149,11 +149,11 @@ const HeroMockup = () => {
             </div>
             <div className="space-y-1.5">
               {[
-                { icon: LayoutGrid, label: "Dashboard" },
-                { icon: ImageIcon, label: "AI Image" },
-                { icon: Video, label: "AI Video" },
-                { icon: FileText, label: "AI Post" },
-                { icon: Share2, label: "Automation" },
+                  { icon: LayoutGrid, label: "Dashboard" },
+                  { icon: ImageIcon, label: "AI Image" },
+                  { icon: Video, label: "AI Video" },
+                  { icon: FileText, label: "AI Post" },
+                  { icon: Share2, label: "Automation" },
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
@@ -185,7 +185,7 @@ const HeroMockup = () => {
                 >
                   <div className="w-full max-w-md">
                     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
-                      <div className="text-sm text-slate-500 mb-2">Describe your idea...</div>
+                      <div className="text-sm text-slate-500 mb-2">What would you like to create?</div>
                       <div className="text-lg font-medium text-slate-900">
                         {promptText}
                         <span className="inline-block w-0.5 h-5 bg-brand-600 ml-1 animate-pulse"></span>
@@ -204,7 +204,7 @@ const HeroMockup = () => {
                 >
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
-                    <p className="text-brand-600 font-semibold">Generating...</p>
+                    <p className="text-brand-600 font-semibold">Creating your content...</p>
                   </div>
                 </motion.div>
               )}
@@ -228,7 +228,7 @@ const HeroMockup = () => {
                       transition={{ delay: 0.3 }}
                       className="absolute -bottom-4 -right-4 bg-emerald-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
                     >
-                      ✓ Ready to publish
+                      ✓ Content ready
                     </motion.div>
                   </div>
                 </motion.div>
@@ -249,9 +249,9 @@ const HeroMockup = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map((num) => (
                   <motion.div 
-                    key={i}
+                    key={num}
                     whileHover={{ y: -2, scale: 1.02 }}
                     className="bg-white/80 backdrop-blur-sm p-4 rounded-xl border border-slate-200/80 shadow-sm"
                   >
@@ -265,14 +265,14 @@ const HeroMockup = () => {
               <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/80 shadow-sm p-6">
                 <div className="h-4 w-40 bg-slate-200 rounded mb-6" />
                 <div className="grid grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map((i) => (
+                  {[1, 2, 3, 4].map((num) => (
                     <motion.div
-                      key={i}
+                      key={num}
                       whileHover={{ scale: 1.05 }}
                       className="aspect-square bg-slate-100 rounded-lg overflow-hidden"
                     >
                       <img 
-                        src={`https://picsum.photos/seed/dash${i}/400/400`}
+                        src={`https://picsum.photos/seed/media${num}/400/400`}
                         alt="Media"
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
@@ -499,7 +499,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold mb-8 leading-[1.1] tracking-tight"
+              className="text-5xl md:text-7xl font-bold mb-8 leading-tight tracking-tight"
             >
               The AI Platform<br />That Turns Ideas Into Content at Scale
             </motion.h1>
@@ -507,7 +507,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-slate-600 text-lg mb-10 max-w-3xl mx-auto leading-relaxed"
+              className="text-slate-600 text-lg mb-10 max-w-3xl mx-auto"
             >
               Generate text, images, and videos in seconds. Turn one idea into content for every platform — powered by advanced AI models and built-in automation.
             </motion.p>
